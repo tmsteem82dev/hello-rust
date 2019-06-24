@@ -14,9 +14,9 @@ $ cargo run
 ```
 
 # Todo
-[ ] Stop parsing odd/even/heck.
-[ ] Input list of URLs to crawl.
-[ ] Dynamic parsing, use css-selector technique to effectively find links in any given URL.
+- [ ] Stop parsing odd/even/heck.
+- [ ] Input list of URLs to crawl.
+- [ ] Dynamic parsing, use css-selector technique to effectively find links in any given URL.
 
 [rustInstall]: <https://www.rust-lang.org/tools/install>
 [vsExtPck]: <https://marketplace.visualstudio.com/items?itemName=swellaby.rust-pack>
