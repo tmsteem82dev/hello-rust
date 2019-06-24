@@ -6,3 +6,8 @@ edition = "2018"
 
 [dependencies]
 ferris-says = "0.1"
+reqwest = "*"
+select = "*"
+scraper = "*"
+prettytable-rs = "*"
+text_io = "*"
