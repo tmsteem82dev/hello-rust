@@ -84,9 +84,9 @@ fn main() {
 
     //simple stats
     let duration = start.elapsed().subsec_millis() as f64;
-    let sz = mem::size_of_val(&document);
-    let throughput = (sz as f64 / duration) * 1000.0;
+    let sz = mem::size_of_val(&document) as f64;
+    let throughput = (sz / duration) * 1000.0;
 
-    stats_table.add_row(row![FdBybl->format!("Duration: {:.*}/ms | Size: {:?}/bytes | Throughput: {:.*}/kbs", 0, duration, sz, 2, throughput)]);
+    stats_table.add_row(row![FdBybl->format!("Duration: {:.*}/ms | Size: {:.*}/bytes | Throughput: {:.*}/kbs", 0, duration, 2, sz, 2, throughput)]);
     stats_table.printstd();
 }
