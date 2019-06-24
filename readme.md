@@ -1,6 +1,6 @@
 # Hello Rust
 Make sure you have: 
-- Rust [installed]]rustInstall]
+- Rust [installed][rustInstall]
 - VS Code with [Rust Extension Pack][vsExtPck]
 
 ![crabby](https://mir-s3-cdn-cf.behance.net/project_modules/disp/7df0bd42774743.57ee5f32bd76e.gif)
