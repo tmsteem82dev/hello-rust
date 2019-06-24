@@ -19,6 +19,8 @@ fn main() {
     println!("Input the number to count...");
     //io read using text_io package
     let count: i32 = read!();
+    println!("Input desired fark category, case sensitive (Cool, Florida, etc, * for all)...");
+    let filterCategory: String = read!();
 
     // NOTE: mut key words makes variable writable
     // Rust variables are immutable by default.
@@ -65,10 +67,18 @@ fn main() {
         // otherwise table will look mangled by long URLs
         let url_trim = url_txt.trim_left_matches('/');
         let category_n_title = format!(" | {} | {}", category, title);
-        // FdBybl-> is formatting syntax specific to
-        // prettytable
-        table.add_row(row![FdBybl->category_n_title]);
-        table.add_row(row![Fy->url_trim]);
+        // FdBybl-> is formatting syntax specific to prettytable
+        // filter out undesired categories
+        if (filterCategory == "*")
+        {
+            table.add_row(row![FdBybl->category_n_title]);
+            table.add_row(row![Fy->url_trim]);
+        }
+        else if (filterCategory == category)
+        {
+            table.add_row(row![FdBybl->category_n_title]);
+            table.add_row(row![Fy->url_trim]);
+        }
     }
     table.printstd();
 
