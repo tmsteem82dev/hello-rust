@@ -1,46 +1,49 @@
-#[macro_use] extern crate prettytable;
+#![feature(proc_macro_hygiene, decl_macro)]
 extern crate reqwest;
 extern crate select;
 #[macro_use] extern crate text_io; 
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate serde_derive;
+#[macro_use] extern crate rocket;
 
 
-use ferris_says::say;
-use reqwest::{Client};
-use std::io::{stdout, BufWriter};
 use select::document::Document;
 use select::predicate::{Class, Name, Predicate};
-use prettytable::Table;
 use std::time::{Duration, Instant};
 use std::mem;
 use std::collections::hash_map::{HashMap};
+use rocket::response::content::Html;
 
 
 fn main() {
-    println!("Wish this were a Rustaceous intro!");
-    println!("Input desired fark category, case sensitive (Cool, Murica, Florida, News, etc, * for all)...");
+    // rocket webserver, routes map to functions below
+    rocket::ignite().mount("/", routes![index, farkerize]).launch();
+}
 
-    let filtercategory: String = read!();
+#[get("/")]
+fn index() -> Html<&'static str> {
+    Html(r"<html><h1>Welcome to this Rustaceous page!</h1><br/>Go to desired fark category like /farkerize/categoryname/, case sensitive (Cool, Murica, Florida, News, etc, * for all)...<br/><a href='/farkerize/Cool'>Try it!</a><br/><footer><img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/7df0bd42774743.57ee5f32bd76e.gif'></footer></html>")
+}
+
+#[get("/farkerize/<filter>")]
+fn farkerize(filter: &rocket::http::RawStr) -> Html<String> {
+
+    let stuff = crawlfark(String::from(filter.as_str())).unwrap();
     
-    //crawl url but here for ferris_says scope
+    Html(format!("<html><h2>Summarized results from fark.com...</h2>{}</html>", stuff))
+}
+
+fn crawlfark(filtercategory: String) -> Result<String, String> {
+    
     let url = String::from("https://www.fark.com");
-
-    let stdout = stdout();
-    let out = format!("^^---  Rustacean crawled: {}  ---^^", url);
-    let width = 53;
-    let mut writer = BufWriter::new(stdout.lock());
-
-    // crab say, somehow happens after the crawl below
-    say(out.as_bytes(), width, &mut writer).unwrap();
 
     // crawl web stuff, very specific for fark.com because css selectors
     let start = Instant::now();
     let resp = reqwest::get(url.as_str()).unwrap();
     let document = Document::from_read(resp).unwrap();
 
-    let mut table = Table::new();
-    let mut stats_table = Table::new();
+    // we will parse crawl results into this table
+    let mut vectable = vec![];
 
     // specific crawler for fark.com
     // uses CSS selector method to find headline text and headline title from the anchor tag
@@ -69,22 +72,33 @@ fn main() {
             // Summarize the linked article via API
             let smmry = summarizeweb(String::from(url_trim.as_str())).unwrap();
             
-            table.add_row(row![FdBybl->category_n_title]);
-            table.add_row(row![Fy->url_trim]);
-            table.add_row(row![FdBgul->String::from("Summarized results:")]);
-            table.add_row(row![Fgl->smmry]);
+            vectable.push(format!("<tr><b>{}</b></tr>",category_n_title));
+            vectable.push(format!("<tr><u>{}</u></tr>",url_trim));
+            vectable.push(format!("<tr><i>{}</i></tr>",smmry));
         }
     }
-    table.printstd();
+
+    let mut output = String::new();
+
+    for val in vectable
+    {
+        output.push_str("<table>");
+        output.push_str(val.as_str());
+        output.push_str("</table>")
+    }
 
     // simple stats
     let duration = start.elapsed().subsec_millis() as f64;
     let sz = mem::size_of_val(&document) as f64;
     let throughput = (sz / duration) * 1000.0;
 
-    stats_table.add_row(row![FdBgbl->format!("Duration: {:.*}/ms | Size: {:.*}/bytes | Throughput: {:.*}/kbs", 0, duration, 2, sz, 2, throughput)]);
-    stats_table.printstd();
+    // stats_table.add_row(row![FdBgbl->format!("Duration: {:.*}/ms | Size: {:.*}/bytes | Throughput: {:.*}/kbs", 0, duration, 2, sz, 2, throughput)]);
+    // for val in stats_table.row_iter()
+    // {
+    //     output.push_str(format!("{:?}\r\n", val));
+    // }
 
+    Ok(output)
 }
 
 fn summarizeweb(url: String) -> Result<String, reqwest::Error> {
