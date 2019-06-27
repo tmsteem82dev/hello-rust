@@ -3,6 +3,7 @@ Make sure you have:
 - Rust [installed][rustInstall]
 - Nightly Rust channel
 - VS Code with [Rust Extension Pack][vsExtPck]
+
 Optional:
 - [Docker](https://hub.docker.com/)
 
