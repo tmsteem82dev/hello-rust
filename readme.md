@@ -6,8 +6,10 @@ Make sure you have:
 
 ![crabby](https://mir-s3-cdn-cf.behance.net/project_modules/disp/7df0bd42774743.57ee5f32bd76e.gif)
 
-# Start
+## Start
+
 From your VSCode terminal:
+
 ```sh
 $ rustup override set nightly
 $ cargo build
@@ -15,7 +17,25 @@ $ cargo build
 $ cargo run
 ```
 
-# Todo
+## Dockerized version
+
+### Build
+
+```sh
+docker build -t hello-rust:latest .
+```
+
+### Run
+
+```sh
+docker run -p 8000:8000 hello-rust
+````
+
+Then navigate to <http://localhost:8000> to access the app.
+
+## Todo
+
+- [x] Dockerize app.
 - [x] Stop parsing odd/even/heck.
 - [x] Respond over HTTP.
 - [ ] Input list of URLs to crawl.
@@ -23,3 +43,6 @@ $ cargo run
 
 [rustInstall]: <https://www.rust-lang.org/tools/install>
 [vsExtPck]: <https://marketplace.visualstudio.com/items?itemName=swellaby.rust-pack>
+
+
+
