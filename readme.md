@@ -24,11 +24,27 @@ $ cargo run
 
 ### Build
 
+Using make:
+
+```make
+make build-docker-latest
+```
+
+or manual:
+
 ```sh
 docker build -t hello-rust:latest .
 ```
 
 ### Run
+
+Using make:
+
+```make
+make run-docker-latest
+```
+
+or manual:
 
 ```sh
 docker run -p 8000:8000 hello-rust
