@@ -1,3 +1,5 @@
+![Rust](https://github.com/tmsteem82dev/hello-rust/workflows/Rust/badge.svg)
+
 # Hello Rust
 Make sure you have: 
 - Rust [installed][rustInstall]
